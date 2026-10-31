@@ -2,20 +2,14 @@
 
 # Weft Puzzles
 
-<!-- shot:start -->
-
-![Screenshot](docs/shot.png)
-
-<!-- shot:end -->
-
 **Five small programming puzzles, solved on a real 8-bit machine.**
 
-[![Live demo](https://img.shields.io/badge/live-play%20it-4fd1e0
-[![Test](https://img.shields.io/github/actions/workflow/status/drsamonline/app-weft-puzzles/test.yml
-[![Build + deploy](https://img.shields.io/github/actions/workflow/status/drsamonline/app-weft-puzzles/build-apps.yml
-[![Release](https://img.shields.io/github/v/release/drsamonline/app-weft-puzzles
-[![Licence](https://img.shields.io/badge/licence-PolyForm%20Noncommercial%201.0.0-5ee0a0
-[![Built on the Loom](https://img.shields.io/badge/built%20on-the%20Loom%20(app--jacquard)-ffb454
+[![Live demo](https://img.shields.io/badge/live-play%20it-4fd1e0?style=flat-square&labelColor=0a2342)](https://drsamonline.github.io/app-weft-puzzles/)
+[![Test](https://img.shields.io/github/actions/workflow/status/drsamonline/app-weft-puzzles/test.yml?branch=main&style=flat-square&label=tests&labelColor=0a2342)](https://github.com/drsamonline/app-weft-puzzles/actions/workflows/test.yml)
+[![Build + deploy](https://img.shields.io/github/actions/workflow/status/drsamonline/app-weft-puzzles/build-apps.yml?branch=main&style=flat-square&label=build&labelColor=0a2342)](https://github.com/drsamonline/app-weft-puzzles/actions/workflows/build-apps.yml)
+[![Release](https://img.shields.io/github/v/release/drsamonline/app-weft-puzzles?style=flat-square&labelColor=0a2342&color=4fd1e0)](https://github.com/drsamonline/app-weft-puzzles/releases/latest)
+[![Licence](https://img.shields.io/badge/licence-PolyForm%20Noncommercial%201.0.0-5ee0a0?style=flat-square&labelColor=0a2342)](LICENSE)
+[![Built on the Loom](https://img.shields.io/badge/built%20on-the%20Loom%20(app--jacquard)-ffb454?style=flat-square&labelColor=0a2342)](https://github.com/drsamonline/app-jacquard)
 
 [**Play it →**](https://drsamonline.github.io/app-weft-puzzles/) · [The machine it runs on](https://github.com/drsamonline/app-jacquard)
 
