@@ -1,2 +1,78 @@
-# app-weft-puzzles
-Weft Puzzles — small programming puzzles you solve in Weft-8 assembly, on the machine from Jacquard (the Loom).
+<div align="center">
+
+# Weft Puzzles
+
+**Five small programming puzzles, solved on a real 8-bit machine.**
+
+[![Live demo](https://img.shields.io/badge/live-play%20it-4fd1e0
+[![Test](https://img.shields.io/github/actions/workflow/status/drsamonline/app-weft-puzzles/test.yml
+[![Build + deploy](https://img.shields.io/github/actions/workflow/status/drsamonline/app-weft-puzzles/build-apps.yml
+[![Release](https://img.shields.io/github/v/release/drsamonline/app-weft-puzzles
+[![Licence](https://img.shields.io/badge/licence-PolyForm%20Noncommercial%201.0.0-5ee0a0
+[![Built on the Loom](https://img.shields.io/badge/built%20on-the%20Loom%20(app--jacquard)-ffb454
+
+[**Play it →**](https://drsamonline.github.io/app-weft-puzzles/) · [The machine it runs on](https://github.com/drsamonline/app-jacquard)
+
+</div>
+
+![Weft Puzzles](docs/shot.png)
+
+A robot on a grid, five puzzles, and a machine with sixteen registers, four flags and twenty-seven
+instructions — **and no `if` statement**. So you build one, out of `CMP` and `JZ`. That is the whole
+point of the puzzles: the constraint is the lesson.
+
+## The five puzzles
+
+| # | Puzzle | What it teaches |
+|---|---|---|
+| 01 | **First thread** | `LDI` puts a number in the accumulator, `OUT MOVE` hands it to the machine |
+| 02 | **Step around** | four moves, three directions — a straight line is not always the answer |
+| 03 | **Until you stand on it** | `LOAD` reads a port; `CMP` + `JZ` are how a machine decides |
+| 04 | **Feel for the wall** | `BUMPED` is the machine's own feedback — a loop that reacts |
+| 05 | **The whole weave** | a level can ask for more than arrival: collect both flags first |
+
+Each puzzle ships a **working solution**, and the test suite runs every one of them on the real
+machine. A puzzle nobody has solved is a puzzle nobody knows is solvable — so that is asserted, not
+assumed.
+
+## Built on the Loom
+
+This app does not carry its own computer. It runs the **Weft-8** from
+[Jacquard (the Loom)](https://github.com/drsamonline/app-jacquard) — `docs/play/weft8.js` is that
+engine, byte for byte the same file, and the same one its 102 assertions cover.
+
+What this repository adds is a *world*: `docs/play/world.js` puts the machine inside a grid and hangs
+seven ports off it, at `0xD0` and up so they never collide with the Loom's own `0xC0`–`0xCA`:
+
+```
+POS_X 0xD0  POS_Y 0xD1  UNDER 0xD2  MOVE 0xD3  BUMPED 0xD4  DONE 0xD5  BEEP 0xD6
+```
+
+So the machine is unchanged, and the puzzle is a peripheral — which is exactly how a real 8-bit
+computer met the world.
+
+## Run it
+
+Open `docs/index.html`, or play the [live demo](https://drsamonline.github.io/app-weft-puzzles/).
+Windows EXE and Android APK are on the [rolling release](https://github.com/drsamonline/app-weft-puzzles/releases/latest).
+
+## Test it
+
+```
+npm install          # jsdom, test-only
+node test-node.js    # 69 assertions: the machine, the world, and every level's solution
+node tests/page-smoke.js   # 12 assertions: the page, driven in jsdom
+```
+
+The engine suite asserts that the machine is still the Loom's (two-byte encoding, 27 opcodes), that the
+world obeys its own rules (walls refuse a move and set the bump flag, flags are taken once, the checker
+knows a level with a flag left is not solved), that **every level's reference solution solves it in under
+400 steps and fits the 128-byte ROM**, and that wrong answers are refused — walking into the wall,
+stopping one square short, and guessing a corridor's length blind.
+
+The page suite boots the real page, picks puzzles, runs programs, peeks at the solution and checks the
+page says *Solved* — because a page that does not work is not a puzzle.
+
+## Licence
+
+**PolyForm Noncommercial 1.0.0** · © 2026 Dr Sohil Momin. Free for any noncommercial purpose.

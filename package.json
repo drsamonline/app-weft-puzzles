@@ -1,0 +1,15 @@
+{
+  "name": "app-weft-puzzles",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Weft Puzzles \u2014 five programming puzzles solved in Weft-8 assembly, on the machine from Jacquard (the Loom).",
+  "scripts": {
+    "test": "node test-node.js && node tests/page-smoke.js",
+    "test:engine": "node test-node.js",
+    "test:page": "node tests/page-smoke.js"
+  },
+  "devDependencies": {
+    "jsdom": "^29.1.1"
+  },
+  "license": "SEE LICENSE IN LICENSE"
+}

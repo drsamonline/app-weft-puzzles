@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Weft Puzzles — five puzzles for an 8-bit machine</title>
+<meta name="description" content="Five small programming puzzles solved in Weft-8 assembly — the 8-bit machine from Jacquard, the Loom. A robot on a grid, a real VM, and nothing hidden.">
+<meta name="theme-color" content="#0a2342">
+<style>
+  :root{
+    --blue:#0a2342; --blue-2:#0d2d55; --grid:rgba(120,190,255,.13); --ink:#e8f4ff;
+    --cyan:#4fd1e0; --chalk:#bcd7ef; --amber:#ffb454; --good:#5ee0a0; --bad:#ff7b72;
+    --line:rgba(120,190,255,.28); --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;color:var(--ink);font:14.5px/1.6 var(--mono);
+    background:
+      linear-gradient(var(--grid) 1px, transparent 1px) 0 0/22px 22px,
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0/22px 22px,
+      radial-gradient(900px 500px at 20% -10%, #10406f 0%, transparent 60%),
+      var(--blue);
+  }
+  a{color:var(--cyan)}
+  .wrap{max-width:1220px;margin:0 auto;padding:0 18px 40px}
+
+  header{display:flex;align-items:center;gap:12px;height:56px;border-bottom:1px solid var(--line);margin-bottom:16px}
+  .logo{width:24px;height:24px;border:1px solid var(--cyan);border-radius:4px;position:relative}
+  .logo:before{content:"";position:absolute;inset:5px;border:1px solid rgba(79,209,224,.5)}
+  .logo:after{content:"";position:absolute;left:11px;top:11px;width:2px;height:2px;background:var(--cyan)}
+  h1{margin:0;font:600 13px/1 var(--mono);letter-spacing:.26em;text-transform:uppercase}
+  .sub{color:var(--chalk);opacity:.7;font-size:11.5px;letter-spacing:.06em}
+  header .r{margin-left:auto;display:flex;gap:12px;font-size:11.5px;color:var(--chalk);opacity:.85}
+  header .r a{text-decoration:none}
+
+  .cols{display:grid;grid-template-columns:250px 1fr 1fr;gap:14px;align-items:start}
+  @media (max-width:1100px){.cols{grid-template-columns:1fr}}
+
+  .panel{border:1px solid var(--line);border-radius:10px;background:rgba(9,30,58,.72);backdrop-filter:blur(2px)}
+  .panel .head{padding:9px 12px;border-bottom:1px solid var(--line);font:600 10px/1 var(--mono);letter-spacing:.22em;text-transform:uppercase;color:var(--chalk);opacity:.85}
+  .panel .in{padding:12px}
+
+  /* levels */
+  .levels{list-style:none;margin:0;padding:0}
+  .levels li{margin:0 0 6px}
+  .levels button{width:100%;text-align:left;background:transparent;border:1px solid transparent;border-radius:7px;
+    color:var(--ink);padding:8px 10px;font:500 13px/1.3 var(--mono);cursor:pointer;display:flex;gap:8px;align-items:baseline}
+  .levels button:hover{background:rgba(79,209,224,.08)}
+  .levels button[aria-current="true"]{background:rgba(79,209,224,.14);border-color:var(--cyan)}
+  .levels .n{color:var(--cyan);opacity:.8;font-size:11px}
+  .levels .tick{margin-left:auto;color:var(--good)}
+  .brief{color:var(--chalk);font-size:12.5px;margin:10px 0 0}
+  .teach{color:var(--amber);font-size:11.5px;margin:8px 0 0;border-left:2px solid rgba(255,180,84,.4);padding-left:9px}
+
+  /* the grid */
+  .board{display:grid;gap:2px;justify-content:center;margin:0 auto}
+  .cell{width:46px;height:46px;border:1px solid rgba(120,190,255,.18);border-radius:3px;position:relative;
+    background:rgba(255,255,255,.03)}
+  .cell.wall{background:repeating-linear-gradient(45deg,rgba(120,190,255,.28) 0 3px,rgba(120,190,255,.10) 3px 7px);
+    border-color:rgba(120,190,255,.45)}
+  .cell.goal{border-color:var(--good);box-shadow:inset 0 0 0 2px rgba(94,224,160,.35)}
+  .cell.goal:after{content:"◎";color:var(--good);position:absolute;inset:0;display:grid;place-items:center;font-size:20px}
+  .cell.flag:after{content:"⚑";color:var(--amber);position:absolute;inset:0;display:grid;place-items:center;font-size:18px}
+  .cell.robot:before{content:"";position:absolute;left:50%;top:50%;width:20px;height:20px;margin:-10px 0 0 -10px;
+    border-radius:4px;background:var(--cyan);box-shadow:0 0 14px rgba(79,209,224,.7)}
+  .cell.robot:after{content:"";position:absolute;left:50%;top:50%;width:6px;height:6px;margin:-3px 0 0 -3px;
+    background:var(--blue);border-radius:50%}
+  .cell.bumped{outline:1px dashed var(--bad);outline-offset:-3px}
+
+  /* editor */
+  textarea{width:100%;height:290px;background:rgba(4,18,36,.85);color:#d9ecff;border:1px solid var(--line);
+    border-radius:8px;padding:11px;font:12.6px/1.6 var(--mono);white-space:pre;overflow-x:auto;tab-size:8}
+  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
+  button.act{background:var(--cyan);color:#04202c;border:1px solid var(--cyan);border-radius:7px;padding:9px 13px;
+    font:600 12.5px/1 var(--mono);cursor:pointer}
+  button.act:hover{filter:brightness(1.1)}
+  button.gh{background:transparent;color:var(--ink);border:1px solid var(--line);border-radius:7px;padding:9px 12px;
+    font:500 12.5px/1 var(--mono);cursor:pointer}
+  button.gh:hover{border-color:var(--cyan);color:var(--cyan)}
+  .status{margin-top:10px;padding:10px 12px;border-radius:8px;border:1px solid var(--line);font-size:12.5px;
+    background:rgba(4,18,36,.7);color:var(--chalk);min-height:44px;white-space:pre-wrap}
+  .status.good{border-color:var(--good);color:var(--good)}
+  .status.bad{border-color:var(--bad);color:#ffb4ae}
+  .hint{color:var(--chalk);opacity:.8;font-size:11.5px;margin-top:10px}
+  footer{margin-top:18px;padding-top:14px;border-top:1px solid var(--line);color:var(--chalk);opacity:.75;
+    font-size:11.5px;display:flex;gap:10px;flex-wrap:wrap}
+  code{background:rgba(79,209,224,.10);border:1px solid rgba(79,209,224,.25);border-radius:4px;padding:1px 4px;font-size:11.5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <span class="logo" aria-hidden="true"></span>
+    <div>
+      <h1>Weft Puzzles</h1>
+      <div class="sub">five puzzles · one 8-bit machine · nothing hidden</div>
+    </div>
+    <div class="r">
+      <a href="../">about</a><span>·</span>
+      <a href="https://github.com/drsamonline/app-jacquard">the Loom</a>
+    </div>
+  </header>
+
+  <div class="cols">
+    <section class="panel">
+      <div class="head">the puzzles</div>
+      <div class="in">
+        <ul class="levels" id="levels"></ul>
+        <p class="brief" id="brief">—</p>
+        <p class="teach" id="teach"></p>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="head">the workshop floor</div>
+      <div class="in">
+        <div class="board" id="board"></div>
+        <div class="row" style="justify-content:center">
+          <button class="act" id="run">Run</button>
+          <button class="gh" id="step">Step</button>
+          <button class="gh" id="reset">Reset</button>
+        </div>
+        <div class="status" id="status">Pick a puzzle and press Run.</div>
+        <p class="hint">The robot is the cyan square. Move it with <code>OUT MOVE</code> — 0 up, 1 right,
+        2 down, 3 left. Feel the floor with <code>LOAD UNDER</code>, and the wall you just hit with
+        <code>LOAD BUMPED</code>.</p>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="head">your program</div>
+      <div class="in">
+        <textarea id="src" spellcheck="false" wrap="off" aria-label="Weft-8 assembly source"></textarea>
+        <div class="row">
+          <button class="gh" id="peek">Show a working solution</button>
+          <button class="gh" id="clear">Clear my work</button>
+        </div>
+        <p class="hint" id="meta"></p>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <span>Built on the Loom — the Weft-8 machine from
+      <a href="https://github.com/drsamonline/app-jacquard">app-jacquard</a>, byte for byte the same engine</span>
+    <span>·</span><span>© 2026 Dr Sohil Momin</span>
+    <span>·</span><span>PolyForm Noncommercial 1.0.0</span>
+    <span>·</span><span>offline, no accounts</span>
+  </footer>
+</div>
+
+<script src="web-kit.js"></script>
+<script src="weft8.js"></script>
+<script src="world.js"></script>
+<script>
+(function () {
+  "use strict";
+  var $ = function (id) { return document.getElementById(id); };
+  var store = (window.Loom && Loom.storage && Loom.storage.namespace) ? Loom.storage.namespace("weftpuzzles") : {
+    get: function (k, d) { try { var v = localStorage.getItem("weftpuzzles:" + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+    set: function (k, v) { try { localStorage.setItem("weftpuzzles:" + k, JSON.stringify(v)); return true; } catch (e) { return false; } }
+  };
+
+  var current = null;
+  var solved = store.get("solved", {}) || {};
+  var drafts = store.get("drafts", {}) || {};
+
+  function starter(level) {
+    return [
+      "; " + level.name,
+      "; " + level.brief,
+      "",
+      "; R0 is the accumulator. Directions: 0 up, 1 right, 2 down, 3 left.",
+      "        LDI 1",
+      "        OUT MOVE",
+      "        HLT"
+    ].join("\n");
+  }
+
+  function renderLevels() {
+    var ul = $("levels");
+    ul.innerHTML = "";
+    World.LEVELS.forEach(function (lv, i) {
+      var li = document.createElement("li");
+      var b = document.createElement("button");
+      b.setAttribute("aria-current", current && current.id === lv.id ? "true" : "false");
+      b.innerHTML = '<span class="n">' + String(i + 1).padStart(2, "0") + '</span><span>' + lv.name + '</span>' +
+        (solved[lv.id] ? '<span class="tick">✓</span>' : '');
+      b.onclick = function () { pick(lv.id); };
+      li.appendChild(b);
+      ul.appendChild(li);
+    });
+  }
+
+  function pick(id) {
+    current = World.levelById(id);
+    renderLevels();
+    $("brief").textContent = current.brief;
+    $("teach").textContent = current.teach;
+    $("src").value = drafts[current.id] !== undefined ? drafts[current.id] : starter(current);
+    $("status").className = "status";
+    $("status").textContent = solved[current.id] ? "You have solved this one. Run it again if you like." : "Press Run when you are ready.";
+    renderBoard(new World.World(current), null);
+    $("meta").textContent = "";
+  }
+
+  function renderBoard(world, vm) {
+    var lv = world.level;
+    var b = $("board");
+    b.style.gridTemplateColumns = "repeat(" + lv.w + ", 46px)";
+    b.innerHTML = "";
+    for (var y = 0; y < lv.h; y++) {
+      for (var x = 0; x < lv.w; x++) {
+        var c = document.createElement("div");
+        c.className = "cell";
+        if (world.isWall(x, y)) c.className += " wall";
+        else {
+          if (x === lv.goal[0] && y === lv.goal[1]) c.className += " goal";
+          for (var i = 0; i < world.flags.length; i++) {
+            if (world.flags[i][0] === x && world.flags[i][1] === y) c.className += " flag";
+          }
+        }
+        if (world.x === x && world.y === y) c.className += " robot" + (world.bumped ? " bumped" : "");
+        b.appendChild(c);
+      }
+    }
+  }
+
+  function run() {
+    if (!current) return;
+    drafts[current.id] = $("src").value;
+    store.set("drafts", drafts);
+    var r = World.run(current, $("src").value, 4000);
+    if (r.errors && r.errors.length) {
+      $("status").className = "status bad";
+      $("status").textContent = r.errors.map(function (e) {
+        return (e.line ? "line " + e.line + ": " : "") + e.message;
+      }).join("\n");
+      $("meta").textContent = "";
+      return;
+    }
+    renderBoard(r.world, r.vm);
+    $("meta").textContent = r.bytes.length + " bytes · " + r.steps + " steps · " +
+      (r.halted ? "halted" : "stopped early");
+    if (r.solved) {
+      $("status").className = "status good";
+      $("status").textContent = "Solved in " + r.steps + " steps. " +
+        (r.world.collected ? r.world.collected + " flag(s) collected. " : "") + "Next one?";
+      solved[current.id] = true;
+      store.set("solved", solved);
+      renderLevels();
+    } else {
+      $("status").className = "status bad";
+      $("status").textContent = "Not solved: " + r.reason + ".";
+    }
+  }
+
+  $("run").onclick = run;
+
+  $("step").onclick = function () {
+    if (!current) return;
+    var r = World.run(current, $("src").value, 1);
+    if (r.errors && r.errors.length) { run(); return; }
+    renderBoard(r.world, r.vm);
+    $("status").className = "status";
+    $("status").textContent = "One step: the robot is at (" + r.world.x + ", " + r.world.y + ").";
+  };
+
+  $("reset").onclick = function () {
+    if (!current) return;
+    renderBoard(new World.World(current), null);
+    $("status").className = "status";
+    $("status").textContent = "Reset — the robot is back at the start.";
+    $("meta").textContent = "";
+  };
+
+  $("peek").onclick = function () {
+    if (!current) return;
+    $("src").value = current.solution;
+    $("status").className = "status";
+    $("status").textContent = "That is one working solution. Read it, then press Run — and try to write a shorter one.";
+  };
+
+  $("clear").onclick = function () {
+    if (!current) return;
+    $("src").value = starter(current);
+    delete drafts[current.id];
+    store.set("drafts", drafts);
+    $("status").className = "status";
+    $("status").textContent = "Cleared. Your own work for this puzzle is gone.";
+  };
+
+  renderLevels();
+  pick(World.LEVELS[0].id);
+})();
+</script>
+</body>
+</html>
