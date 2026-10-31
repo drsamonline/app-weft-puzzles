@@ -60,7 +60,7 @@
   <div class="frame">
     <div class="top"><span>drawing no. wp-01 · weft-8 puzzles</span><span>scale 1:1 · sheet 1 of 1</span></div>
 
-    <h1>Five puzzles for a <span>real</span> machine.</h1>
+    <h1>Six puzzles for a <span>real</span> machine.</h1>
     <p class="lede">A robot on a grid. Sixteen registers, four flags, twenty-seven instructions, and no
     <code>if</code> statement — so you build one. Every puzzle here is solved by a Weft-8 program you write
     yourself, and the same machine is what runs it.</p>
@@ -76,6 +76,7 @@
       <div class="plate"><div class="no">PLATE 03</div><h3>Until you stand on it</h3><p>a corridor of unknown length</p></div>
       <div class="plate"><div class="no">PLATE 04</div><h3>Feel for the wall</h3><p>you cannot see it, you can feel it</p></div>
       <div class="plate"><div class="no">PLATE 05</div><h3>The whole weave</h3><p>two flags on the way, then the goal</p></div>
+      <div class="plate"><div class="no">PLATE 06</div><h3>The long way round</h3><p>three bump loops in a row</p></div>
     </div>
 
     <div class="split">
@@ -110,7 +111,7 @@ east:   <span class="k">LDI</span> 1            <span class="c">; 1 = east</span
   </div>
 </div>
 
-<section id="family" style="margin:30px 0 0;padding-top:20px;border-top:1px solid rgba(128,128,128,.35)">
+<div class="famwrap" style="max-width:1060px;margin:0 auto;padding:0 22px"><section id="family" style="margin:30px 0 0;padding-top:20px;border-top:1px solid rgba(128,128,128,.35)">
   <p style="font:600 10.5px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.2em;text-transform:uppercase;opacity:.6;margin:0 0 12px">the weft-8 family — one machine, seven faces</p>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:10px">
     <a href="https://drsamonline.github.io/app-jacquard/" style="display:block;border:1px solid rgba(128,128,128,.35);border-radius:6px;padding:10px 12px;text-decoration:none;color:inherit"><b style="display:block;font-size:12.5px">the Loom</b><span style="font-size:11.5px;opacity:.75">the machine and its editor — where it all starts</span></a>
@@ -122,7 +123,7 @@ east:   <span class="k">LDI</span> 1            <span class="c">; 1 = east</span
     <a href="https://drsamonline.github.io/weft8-compare/" style="display:block;border:1px solid rgba(128,128,128,.35);border-radius:6px;padding:10px 12px;text-decoration:none;color:inherit"><b style="display:block;font-size:12.5px">Weft-8 beside x86 and ARM</b><span style="font-size:11.5px;opacity:.75">the same four jobs in three machines</span></a>
   </div>
   <p style="font-size:11.5px;opacity:.6;margin:12px 0 0">Every one of these runs the same engine — <code>weft8.js</code> from the Loom, byte for byte. Learn it once and you have learned all seven.</p>
-</section>
+</section></div>
 
 <footer>
   <span>Built on the Loom — the same engine, byte for byte, as
