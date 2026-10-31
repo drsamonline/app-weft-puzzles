@@ -2,13 +2,7 @@
 
 # Weft Puzzles
 
-<!-- shot:start -->
-
-![Screenshot](docs/shot.png)
-
-<!-- shot:end -->
-
-**Five small programming puzzles, solved on a real 8-bit machine.**
+**Six small programming puzzles, solved on a real 8-bit machine.**
 
 [![Live demo](https://img.shields.io/badge/live-play%20it-4fd1e0?style=flat-square&labelColor=0a2342)](https://drsamonline.github.io/app-weft-puzzles/)
 [![Test](https://img.shields.io/github/actions/workflow/status/drsamonline/app-weft-puzzles/test.yml?branch=main&style=flat-square&label=tests&labelColor=0a2342)](https://github.com/drsamonline/app-weft-puzzles/actions/workflows/test.yml)
@@ -27,7 +21,7 @@ A robot on a grid, five puzzles, and a machine with sixteen registers, four flag
 instructions — **and no `if` statement**. So you build one, out of `CMP` and `JZ`. That is the whole
 point of the puzzles: the constraint is the lesson.
 
-## The five puzzles
+## The six puzzles
 
 | # | Puzzle | What it teaches |
 |---|---|---|
@@ -36,6 +30,7 @@ point of the puzzles: the constraint is the lesson.
 | 03 | **Until you stand on it** | `LOAD` reads a port; `CMP` + `JZ` are how a machine decides |
 | 04 | **Feel for the wall** | `BUMPED` is the machine's own feedback — a loop that reacts |
 | 05 | **The whole weave** | a level can ask for more than arrival: collect both flags first |
+| 06 | **The long way round** | three bump loops in a row — a program is a shape you repeat |
 
 Each puzzle ships a **working solution**, and the test suite runs every one of them on the real
 machine. A puzzle nobody has solved is a puzzle nobody knows is solvable — so that is asserted, not
@@ -78,6 +73,22 @@ stopping one square short, and guessing a corridor's length blind.
 
 The page suite boots the real page, picks puzzles, runs programs, peeks at the solution and checks the
 page says *Solved* — because a page that does not work is not a puzzle.
+
+
+## The Weft-8 family
+
+One machine, seven faces. Every one of these runs `weft8.js` from the Loom, byte for byte —
+learn it once and you have learned all seven.
+
+| | what it is |
+|---|---|
+| [the Loom](https://drsamonline.github.io/app-jacquard/) | the machine and its editor — where it all starts |
+| **Weft Puzzles** (you are here) | five puzzles solved in assembly, a robot on a grid |
+| [Clip Loom](https://drsamonline.github.io/app-clip-loom/) | clipboard programs you can read: strip, squeeze, wrap |
+| [Weft-8 on hardware](https://drsamonline.github.io/weft8-hardware/) | the same machine in C, three-way parity with the JS one |
+| [weft8-kit](https://drsamonline.github.io/weft8-kit/) | rules small enough to sign off |
+| [Weft-8 Classroom](https://drsamonline.github.io/weft8-classroom/) | eight exercises that teach how a computer works |
+| [Weft-8 beside x86 and ARM](https://drsamonline.github.io/weft8-compare/) | the same four jobs in three machines |
 
 ## Licence
 

@@ -126,6 +126,29 @@
         "        JMP loop",
         "done:   HLT"
       ].join("\n")
+    },
+    {
+      id: "the-long-way-round",
+      name: "The long way round",
+      brief: "Three walls, one corner. East until you bump, south until you bump, then west until you stop.",
+      teaches: "The same three instructions, three times. A program is a shape you repeat, not a list you write once.",
+      w: 5, h: 3, start: [0, 0], goal: [0, 2], walls: [[1, 1], [2, 1], [3, 1]], flags: [],
+      solution: [
+        "; each leg is a bump loop; the machine tells you when to turn",
+        "east:   LDI 1                ; east",
+        "        OUT MOVE",
+        "        LOAD BUMPED",
+        "        JZ  east",
+        "south:  LDI 2                ; south",
+        "        OUT MOVE",
+        "        LOAD BUMPED",
+        "        JZ  south",
+        "west:   LDI 3                ; west",
+        "        OUT MOVE",
+        "        LOAD BUMPED",
+        "        JZ  west",
+        "        HLT"
+      ].join("\n")
     }
   ];
 
