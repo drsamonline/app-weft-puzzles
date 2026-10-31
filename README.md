@@ -2,6 +2,12 @@
 
 # Weft Puzzles
 
+<!-- shot:start -->
+
+![Screenshot](docs/shot.png)
+
+<!-- shot:end -->
+
 **Five small programming puzzles, solved on a real 8-bit machine.**
 
 [![Live demo](https://img.shields.io/badge/live-play%20it-4fd1e0
