@@ -65,6 +65,15 @@
   .toggle svg { width: 13px; height: 13px; }
   .bar nav + .toggle { margin-left: 0; }
 
+  /* ---- the family strip: one machine, seven faces ------------------------ */
+  .fam { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px; }
+  .fam-card { display: block; border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px;
+              text-decoration: none; color: inherit; background: var(--card); }
+  .fam-card b { display: block; font-size: 12.5px; }
+  .fam-card span { font-size: 11.5px; color: var(--muted); }
+  a.fam-card:hover { border-color: var(--cyan); color: var(--cyan); }
+  .fam-card.here { border-color: var(--cyan); box-shadow: inset 0 0 0 1px var(--cyan); }
+
   /* ---- hero: the sheet's header block ---- */
   .hero { padding: 56px 0 0; }
   .stamp { display: flex; flex-wrap: wrap; gap: 10px 22px; font-size: 10.5px; letter-spacing: .14em;
@@ -240,6 +249,19 @@
     problems, and nothing hidden: the instruction set is printed in the workshop, the flags are
     visible while the program runs, and every puzzle is solvable with the same twenty-seven
     instructions. Offline, no account, no network calls.</p>
+  </section>
+
+  <section id="family">
+    <h2>The Weft-8 family — one machine, seven faces</h2>
+    <div class="fam">
+      <a class="fam-card" href="https://drsamonline.github.io/app-jacquard/"><b>the Loom</b><span>the machine and its editor — where it all starts</span></a>
+      <div class="fam-card here"><b>Weft Puzzles</b><span>you are here</span></div>
+      <a class="fam-card" href="https://drsamonline.github.io/app-clip-loom/"><b>Clip Loom</b><span>clipboard programs you can read: strip, squeeze, wrap</span></a>
+      <a class="fam-card" href="https://drsamonline.github.io/weft8-hardware/"><b>Weft-8 on hardware</b><span>the same machine in C, three-way parity with the JS one</span></a>
+      <a class="fam-card" href="https://drsamonline.github.io/weft8-kit/"><b>weft8-kit</b><span>rules small enough to sign off</span></a>
+      <a class="fam-card" href="https://drsamonline.github.io/weft8-classroom/"><b>Weft-8 Classroom</b><span>eight exercises that teach how a computer works</span></a>
+      <a class="fam-card" href="https://drsamonline.github.io/weft8-compare/"><b>Weft-8 beside x86 and ARM</b><span>the same four jobs in three machines</span></a>
+    </div>
   </section>
 
   <section class="support" id="support">
