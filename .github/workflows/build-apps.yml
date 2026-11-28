@@ -19,7 +19,7 @@ concurrency:
 
 jobs:
   app:
-    uses: drsamonline/app-builder/.github/workflows/build.yml@a9b6c79b987bcf6426c5682cfa84bb94d432fe88
+    uses: drsamonline/app-builder/.github/workflows/build.yml@a1dfa124cbc55390598295a0c8be54dae33696c0
     with:
       app_name: weft-puzzles
       app_src: docs/play
